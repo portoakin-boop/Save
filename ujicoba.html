@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jadwal Kelas UIN - Login</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.login-container {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    max-width: 400px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 28px;
+}
+
+.login-container p {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.error-message {
+    color: #e74c3c;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 13px;
+    display: none;
+    padding: 10px;
+    background: #fadbd8;
+    border-radius: 5px;
+    border-left: 4px solid #e74c3c;
+}
+
+.error-message.show {
+    display: block;
+}
+
+.success-message {
+    color: #27ae60;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 13px;
+    display: none;
+    padding: 10px;
+    background: #d5f4e6;
+    border-radius: 5px;
+    border-left: 4px solid #27ae60;
+}
+
+.success-message.show {
+    display: block;
+}
+
+.jadwal-container {
+    display: none;
+}
+
+.jadwal-container.active {
+    display: block;
+}
+
+/* Jadwal Kelas Styles */
+.jadwal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.jadwal-header h1 {
+    text-align: left;
+    color: white;
+    flex: 1;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.logout-btn, .reset-btn, .export-btn {
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.logout-btn {
+    background: #e74c3c;
+}
+
+.logout-btn:hover {
+    background: #c0392b;
+}
+
+.reset-btn {
+    background: #f39c12;
+}
+
+.reset-btn:hover {
+    background: #d68910;
+}
+
+.export-btn {
+    background: #27ae60;
+}
+
+.export-btn:hover {
+    background: #229954;
+}
+
+.cinema {
+    background: #1b1b2f;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.floor-label {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 20px 0 10px 0;
+    color: #FFD700;
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    margin: 8px 0;
+    flex-wrap: wrap;
+}
+
+.seat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 5px;
+}
+
+.seat-box input {
+    width: 60px;
+    margin-top: 5px;
+    padding: 4px;
+    font-size: 11px;
+    text-align: center;
+    border-radius: 5px;
+    border: none;
+}
+
+.seat {
+    width: 40px;
+    height: 40px;
+    background: gray;
+    margin: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid transparent;
+}
+
+.seat:hover {
+    transform: scale(1.1);
+}
+
+.selected {
+    background: limegreen;
+    border: 2px solid #00cc00;
+}
+
+.occupied {
+    background: red;
+    border: 2px solid #cc0000;
+}
+
+.info {
+    margin-top: 20px;
+    font-size: 18px;
+    color: white;
+    text-align: center;
+}
+
+.save-status {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    background: #27ae60;
+    color: white;
+    border-radius: 5px;
+    display: none;
+    z-index: 1000;
+    animation: slideIn 0.3s ease-out;
+}
+
+.save-status.show {
+    display: block;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .jadwal-header {
+        flex-direction: column;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .cinema {
+        max-height: 60vh;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SECTION -->
+<div class="login-container" id="loginContainer">
+    <h1>Jadwal Kelas UIN</h1>
+    <p>Masukkan password untuk mengakses jadwal kelas</p>
+    
+    <div class="error-message" id="errorMessage"></div>
+    <div class="success-message" id="successMessage"></div>
+    
+    <div class="form-group">
+        <label for="passwordInput">Password:</label>
+        <input type="password" id="passwordInput" placeholder="Masukkan password" />
+    </div>
+    
+    <button class="login-btn" onclick="validateLogin()">Login</button>
+</div>
+
+<!-- JADWAL KELAS SECTION -->
+<div class="jadwal-container" id="jadwalContainer">
+    <div class="jadwal-header">
+        <h1>Jadwal Kelas UIN</h1>
+        <div class="header-actions">
+            <button class="export-btn" onclick="exportData()"> Export</button>
+            <button class="reset-btn" onclick="resetAll()"> Reset</button>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="cinema" id="cinemaContainer">
+        <div class="floor-label">Lantai 1</div>
+        <div class="row">
+           <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-101" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-102" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-103" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-104" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-105" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-106" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-107" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-108" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+        </div>
+
+        <div class="row">
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-101" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-102" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-103" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-104" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-105" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-106" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-107" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-108" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+        </div>
+
+        <div class="row">
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-101" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-102" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-103" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-104" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-105" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-106" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-107" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-108" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+        </div>
+
+        <div class="row">
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-101" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-102" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-103" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-104" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-105" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-106" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-107" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-108" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+        </div>
+
+        <div class="row">
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-101" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-102" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-103" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-104" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-105" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-106" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-107" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-108" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+        </div>
+
+        <div class="floor-label">Lantai 2</div>
+        <div class="row">
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-201" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-202" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-203" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-204" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-205" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-206" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-207" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="A-208" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+        </div>
+
+        <div class="row">
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-201" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-202" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-203" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-204" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-205" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-206" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-207" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="B-208" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+        </div>
+
+        <div class="row">
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-201" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-202" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-203" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-204" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-205" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-206" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-207" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="C-208" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+        </div>
+
+        <div class="row">
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-201" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-202" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-203" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-204" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-205" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-206" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-207" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="D-208" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+        </div>
+
+        <div class="row">
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-201" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-202" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-203" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-204" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-205" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-206" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-207" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+            <div class="seat-box"><div class="seat"></div><input type="text" placeholder="E-208" style="background: #eae1e1; color: #333; border: 1px solid #555;" disabled><input type="text" placeholder="Jam" class="jam-input"></div>
+        </div>
+
+        <div class="info">Kelas Dipakai: <span id="count">0</span></div>
+    </div>
+</div>
+
+<div class="save-status" id="saveStatus">✓ Data tersimpan</div>
+
+<script>
+const CORRECT_PASSWORD = "uin2026";
+const STORAGE_KEY = "jadwal_kelas_data";
+let saveTimeout;
+
+function validateLogin() {
+    const passwordInput = document.getElementById('passwordInput').value;
+    const errorMessage = document.getElementById('errorMessage');
+    const successMessage = document.getElementById('successMessage');
+    
+    errorMessage.classList.remove('show');
+    successMessage.classList.remove('show');
+    
+    if (passwordInput === '') {
+        errorMessage.textContent = '⚠️ Password tidak boleh kosong!';
+        errorMessage.classList.add('show');
+        return;
+    }
+    
+    if (passwordInput === CORRECT_PASSWORD) {
+        successMessage.textContent = '✓ Login berhasil! Mengalihkan...';
+        successMessage.classList.add('show');
+        
+        setTimeout(() => {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('jadwalContainer').classList.add('active');
+            initializeSeats();
+            loadData();
+        }, 1000);
+    } else {
+        errorMessage.textContent = '❌ Password salah! Coba lagi.';
+        errorMessage.classList.add('show');
+        document.getElementById('passwordInput').value = '';
+    }
+}
+
+function logout() {
+    saveData();
+    document.getElementById('jadwalContainer').classList.remove('active');
+    document.getElementById('loginContainer').style.display = 'flex';
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('errorMessage').classList.remove('show');
+    document.getElementById('successMessage').classList.remove('show');
+}
+
+function initializeSeats() {
+    const seats = document.querySelectorAll('.seat');
+    const count = document.getElementById('count');
+    const jamInputs = document.querySelectorAll('.jam-input');
+    
+    function updateCount() {
+        const selectedSeats = document.querySelectorAll('.seat.selected');
+        count.textContent = selectedSeats.length;
+    }
+    
+    seats.forEach((seat, index) => {
+        seat.addEventListener('click', () => {
+            if (seat.classList.contains('occupied')) {
+                seat.classList.remove('occupied');
+            } else if (seat.classList.contains('selected')) {
+                seat.classList.remove('selected');
+            } else {
+                seat.classList.add('selected');
+            }
+            updateCount();
+            autoSaveData();
+        });
+    });
+
+    jamInputs.forEach(input => {
+        input.addEventListener('change', () => {
+            autoSaveData();
+        });
+
+        input.addEventListener('input', () => {
+            autoSaveData();
+        });
+    });
+}
+
+function saveData() {
+    const seats = document.querySelectorAll('.seat');
+    const jamInputs = document.querySelectorAll('.jam-input');
+    
+    const data = {
+        seats: [],
+        jamData: [],
+        timestamp: new Date().toISOString()
+    };
+
+    seats.forEach(seat => {
+        data.seats.push({
+            selected: seat.classList.contains('selected'),
+            occupied: seat.classList.contains('occupied')
+        });
+    });
+
+    jamInputs.forEach(input => {
+        data.jamData.push(input.value);
+    });
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    console.log('Data tersimpan:', data);
+}
+
+function autoSaveData() {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+        saveData();
+        showSaveStatus();
+    }, 500);
+}
+
+function loadData() {
+    const savedData = localStorage.getItem(STORAGE_KEY);
+    
+    if (savedData) {
+        try {
+            const data = JSON.parse(savedData);
+            const seats = document.querySelectorAll('.seat');
+            const jamInputs = document.querySelectorAll('.jam-input');
+
+            seats.forEach((seat, index) => {
+                if (data.seats[index]) {
+                    if (data.seats[index].selected) {
+                        seat.classList.add('selected');
+                    }
+                    if (data.seats[index].occupied) {
+                        seat.classList.add('occupied');
+                    }
+                }
+            });
+
+            jamInputs.forEach((input, index) => {
+                if (data.jamData[index]) {
+                    input.value = data.jamData[index];
+                }
+            });
+
+            updateCount();
+            console.log('Data dimuat dari penyimpanan');
+        } catch (error) {
+            console.error('Error loading data:', error);
+        }
+    }
+}
+
+function updateCount() {
+    const selectedSeats = document.querySelectorAll('.seat.selected');
+    document.getElementById('count').textContent = selectedSeats.length;
+}
+
+function showSaveStatus() {
+    const saveStatus = document.getElementById('saveStatus');
+    saveStatus.classList.add('show');
+    setTimeout(() => {
+        saveStatus.classList.remove('show');
+    }, 2000);
+}
+
+function resetAll() {
+    if (confirm('Apakah Anda yakin ingin mereset semua data? Tindakan ini tidak dapat dibatalkan.')) {
+        const seats = document.querySelectorAll('.seat');
+        const jamInputs = document.querySelectorAll('.jam-input');
+
+        seats.forEach(seat => {
+            seat.classList.remove('selected', 'occupied');
+        });
+
+        jamInputs.forEach(input => {
+            input.value = '';
+        });
+
+        updateCount();
+        saveData();
+        showSaveStatus();
+        alert('Semua data telah direset!');
+    }
+}
+
+function exportData() {
+    const savedData = localStorage.getItem(STORAGE_KEY);
+    
+    if (!savedData) {
+        alert('Tidak ada data untuk diekspor!');
+        return;
+    }
+
+    const data = JSON.parse(savedData);
+    const csvContent = "data:text/csv;charset=utf-8," + 
+        "Kelas,Status,Jam\n" +
+        document.querySelectorAll('.jam-input').forEach((input, index) => {
+            const room = input.previousElementSibling.placeholder;
+            const status = document.querySelectorAll('.seat')[index].classList.contains('selected') ? 'Dipakai' : 'Kosong';
+            const jam = input.value || '-';
+            return `${room},${status},${jam}`;
+        }).join('\n');
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `jadwal_kelas_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Deteksi Enter key di password input
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('passwordInput').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            validateLogin();
+        }
+    });
+
+    // Autosave sebelum halaman ditutup
+    window.addEventListener('beforeunload', function(e) {
+        if (document.getElementById('jadwalContainer').classList.contains('active')) {
+            saveData();
+        }
+    });
+});
+</script>
+
+</body>
+</html>
